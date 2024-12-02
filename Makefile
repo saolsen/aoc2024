@@ -26,7 +26,7 @@ INSTALL = install
 # make build more deterministic
 LC_ALL = C.UTF-8
 SOURCE_DATE_EPOCH = 0
-export MODE
+MODE = dbg
 export TMPDIR
 export LC_ALL
 export SOURCE_DATE_EPOCH
@@ -34,15 +34,15 @@ export SOURCE_DATE_EPOCH
 FILES := $(wildcard src/*)
 SRCS = $(filter %.cpp,$(FILES))
 HDRS = $(filter %.h,$(AOC2024_FILES))
-COMS = $(SRCS:src/%.cpp=o/%.com)
+COMS = $(SRCS:src/%.cpp=o/$(MODE)/%.com)
 
-o/%.com: src/%.cpp
+o/$(MODE)/%.com: src/%.cpp
 	@mkdir -p $(@D)
-	$(CXX) -Wall -Wextra -Wshadow --std=c++11 -g -o $@ $<
+	$(CXX) -Wall -Wextra -Wshadow --std=c++11 -m$(MODE) -o $@ $<
 
 .PHONY: all
-all: o deps
-o: $(COMS)
+all: o/$(MODE) deps
+o/$(MODE): $(COMS)
 
 .PHONY: clean
 clean:; rm -rf o
